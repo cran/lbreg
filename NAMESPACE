@@ -1,0 +1,12 @@
+export(lbreg,predict.lbreg,relrisk,HL_test)
+S3method(predict,lbreg)
+S3method(print,lbreg)
+S3method(summary,lbreg)
+S3method(lbreg,formula)
+S3method(print,summary.lbreg)
+importFrom("stats", "coef", "constrOptim", "dbinom", "fitted",
+             "formula", "glm.fit", "model.frame", "model.matrix",
+             "model.response", "na.omit", "pchisq", "pnorm", "poisson",
+             "printCoefmat", "qnorm", "quantile", "xtabs")
+
+
