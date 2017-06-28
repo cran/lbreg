@@ -33,7 +33,7 @@ lbregEst <- function(x, y, start.beta, tol, ...)
      p = ncol(X)
      dim(A) = c(r,p)
     }else{
-     A = unique(A) 
+     A = unique(A)   # Afull may have repeated rows
      r = nrow(A)
      p = ncol(X)
      dim(A) = c(r,p)
@@ -49,6 +49,7 @@ lbregEst <- function(x, y, start.beta, tol, ...)
          warning("could not invert (W'JW) --- 'vcov' ignores active constraints")
     }
    active <- Afull
+   if( any(a) ){  dim(active) <- dim(A)  }
    rownames(active) <- (1:nrow(X))[a]
    colnames(active) <- colnames(X)
    }else{  # no active constraints
