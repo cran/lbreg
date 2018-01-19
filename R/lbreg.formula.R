@@ -2,13 +2,13 @@ lbreg.formula <- function(formula, data=list(), ...)
 {
   data <- na.omit(data)
   mf <- model.frame(formula=formula, data=data)
-  x <- model.matrix(attr(mf, "terms"), data=mf)
-  y <- model.response(mf)
+  terms <- attr(mf, "terms")
+    
+  fit <- lbreg.default(x=model.matrix(terms, mf), y=model.response(mf), ...)  
   
-  est <- lbreg.default(x, y, ...)
-
-  est$call <- match.call()
-  est$formula <- formula
-  est$data <- data
-  est
+  fit$terms <- terms
+  fit$call <- match.call()
+  fit$formula <- formula
+  fit$data <- data
+  fit
 }

@@ -1,7 +1,13 @@
 
 HL_test <- function( object, g=10){
 	
-   if(class(object) != "lbreg") warning("HL.test was meant for _lbreg_ objects; also OK for some _glm's_")
+   if(class(object) != "lbreg") warning("HL.test was meant for _lbreg_ objects; it may work for _glm's_")
+   
+   grouped.data <- attr(object$terms, 'dataClasses')[1] == "nmatrix.2"
+   
+   if( grouped.data ) stop("Hosmer-Lemeshow test not meant for grouped data.")
+   
+   cat("   The Hosmer-Lemeshow Goodness-of-Fit Test", "\n")
    
    DATA <- object$data
    y <- DATA[,as.character(formula(object)[[2]])]

@@ -25,7 +25,7 @@ Predicted values based on 'lbreg' object.
 If newdata is omitted the predictions are simply the fitted values stored in the object supplied.
 }
 \value{
-\item{Active.pred}{new active restrictions imposed by newdata.}
+\item{Active}{active restrictions (taking newdata into account).}
 \item{coef.pred}{regression coefficients re-estimated to satisfy possibly new restrictions imposed by newdata. See reference below.}
 \item{convergence}{same as in the object supplied.}
 \item{se.pred}{estimated standard errors of predictions.}
@@ -33,7 +33,8 @@ If newdata is omitted the predictions are simply the fitted values stored in the
 \item{ypred}{predicted probabilities for newdata.}
 }
 \references{
-Andrade, BB; Andrade JML (submitted) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
+Andrade, BB; Andrade JML (forthcoming) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
+Communications in Statistics - Theory and Methods.
 
 }
 \author{

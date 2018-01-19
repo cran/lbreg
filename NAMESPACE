@@ -8,5 +8,4 @@ importFrom("stats", "coef", "constrOptim", "dbinom", "fitted",
              "formula", "glm.fit", "model.frame", "model.matrix",
              "model.response", "na.omit", "pchisq", "pnorm", "poisson",
              "printCoefmat", "qnorm", "quantile", "xtabs")
-
-
+importFrom("stats", "delete.response", "terms")

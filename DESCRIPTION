@@ -1,15 +1,15 @@
 Package: lbreg
 Type: Package
 Title: Log-Binomial Regression with Constrained Optimization
-Description: Maximum likelihood estimation of log-binomial regression with special functionality when the MLE is on (or close to) the boundary of the parameter space.
-Version: 1.1
-Date: 2017-06-26
-Author: Bernardo B. Andrade and Mateus Carbone Ananias
+Description: Maximum likelihood estimation of log-binomial regression with special functionality when the MLE is on the boundary of the parameter space.
+Version: 1.2
+Date: 2018-01-17
+Author: Bernardo B. Andrade 
 Maintainer: Bernardo Andrade <bbandrade@unb.br>
 License: GPL-2
 Depends: R (>= 3.2.0)
 Imports: MASS
 NeedsCompilation: no
-Packaged: 2017-06-28 16:28:02 UTC; root
+Packaged: 2018-01-19 16:48:46 UTC; bernardo
 Repository: CRAN
-Date/Publication: 2017-06-28 17:50:36 UTC
+Date/Publication: 2018-01-19 17:15:04 UTC

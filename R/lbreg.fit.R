@@ -1,9 +1,7 @@
-# Function to perform LBR via constrained optimization
-# (basically a wrapper to 'constrOptim' which is already part of R base) 
-
-lbregEst <- function(x, y, start.beta, tol, ...)
+lbreg.fit <- function(x, y, start.beta, tol, ...)
 {
     X <- x
+    #y <- as.matrix(y)  
     out <- constrOptim(theta = start.beta, f = negll, grad = gr, method="BFGS", hessian=TRUE,
             ui = -X, ci = rep(0,nrow(X)),
             x = X, y = y, control = list(maxit=200))
@@ -19,7 +17,7 @@ lbregEst <- function(x, y, start.beta, tol, ...)
 
  
     yhat <- as.vector(exp(X %*% beta))
-    out$fitted.values <- yhat
+    #out$fitted.values <- yhat
     #out$residuals <- y - yhat
     
    # active constraints
@@ -38,7 +36,7 @@ lbregEst <- function(x, y, start.beta, tol, ...)
      p = ncol(X)
      dim(A) = c(r,p)
     }
-    Wtil = diag(p) - proj(t(A))
+    Wtil = diag(p) - projx(t(A))
     W = Wtil[1:p,1:(p-r)]
     if( max( A%*%W ) > sqrt( 1e-6 ) ) { warning("max AW is > 1e-6") }
     meat = try( MASS::ginv(t(W) %*% J %*% W) )
@@ -46,7 +44,7 @@ lbregEst <- function(x, y, start.beta, tol, ...)
          new.vcov <- W %*% meat %*% t(W)
          out$vcov <- new.vcov
       }else{
-         warning("could not invert (W'JW) --- 'vcov' ignores active constraints")
+         warning("could not invert (W'JW) --- reported 'vcov' is ignoring active constraints")
     }
    active <- Afull
    if( any(a) ){  dim(active) <- dim(A)  }
@@ -58,9 +56,47 @@ lbregEst <- function(x, y, start.beta, tol, ...)
 
    SE <- sqrt( diag( out$vcov ) )
    names(SE) <- names(beta)
-     
-      
-    return( list(coefficients = beta, 
+   
+   rownames(out$vcov) <- colnames(out$vcov) <- names(beta)
+  
+   # deviance residuals 
+   y1 <- y[,1]
+   if( ncol(y) == 1 ){  
+	     n <- 1
+	     i <- y1 == 0 
+         j <- y1 == 1 
+         Y <- y1
+         d <- y1*log(Y/yhat) + (1-Y)*log((1-Y)/(1-yhat)) 
+	     di <- -log(1-yhat[i])
+	     dj <- -log(yhat[j])
+	     d[i] <- di
+	     d[j] <- dj 
+    }
+	if( ncol(y) == 2 ){
+		 n <- rowSums(y) 
+		 i <- y1 == 0 
+         j <- y1 == n 
+         Y <- y1/n
+         d <- y1*log(y1/(n*yhat)) + (n-y1)*log((1-Y)/(1-yhat)) 
+	     di <- -n[i]*log(1-yhat[i])
+	     dj <- -n[j]*log(yhat[j])
+	     d[i] <- di
+	     d[j] <- dj
+	}
+    
+    vu <- yhat*(1-yhat)/n      
+    pear.res <- (Y-yhat) / sqrt( vu )     
+    Xp <- sum(pear.res^2)
+    
+    
+    w <- diag( n*yhat / (1-yhat) )
+    inv <- MASS::ginv(t(X) %*% w %*% X)
+    H <- w %*% X %*% inv %*% t(X) 
+    
+    lev <- diag(H)
+    cook <-  lev * ( pear.res/(1-lev) )^2 / ncol(X)
+    
+   fit <- list(coefficients = beta, 
                  se = SE , 
                  vcov = out$vcov, 
                  vcov0=vcov0, 
@@ -68,6 +104,12 @@ lbregEst <- function(x, y, start.beta, tol, ...)
                  fitted.values = yhat, 
                  df = nrow(X) - ncol(X), 
                  loglik= -out$value,
+                 deviance = 2*sum( d ),  # = 2*out$value when n_i = 1, all i 
+                 dev.resid = sign(Y-yhat)*sqrt(2*d),
+                 residuals = pear.res,
+                 X2 = Xp,
+                 hat.matrix = H,
+                 cook.distance = cook,   
                  convergence = out$convergence,
                  barrier.value = out$barrier.value,
                  outer.iterations = out$outer.iterations, 
@@ -75,6 +117,9 @@ lbregEst <- function(x, y, start.beta, tol, ...)
                  formula = formula,
                  tol = tol, 
                  start.beta = start.beta)
-     ) 
+    
+    class(fit) <- "lbreg"
+    return(fit)
+ 
 }
 

@@ -6,11 +6,12 @@
 The HL decile-of-risk test.  Validity of the test
 assumes that the number of covariate patterns
 is close to the number of observations which is violated 
-when many observations have the same covariate pattern. 
-and several ties will impact the required ordering and grouping
-of observations. 
+when many observations have the same covariate pattern
+and several ties will impact the required ordering and 
+grouping (by deciles) of observations. 
 This is less likely when there is at least one 
 continuous covariate. 
+Not valid for grouped data.
 }
 \usage{ HL_test(object, g = 10) }
 %- maybe also 'usage' for other objects documented here.

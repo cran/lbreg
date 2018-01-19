@@ -1,24 +1,20 @@
 lbreg.default <- function(x, y, start.beta, tol=.9999, delta=1, ...)
 {
-  x <- as.matrix(x)
-  y <- as.numeric(y)
-  
+  y <- as.matrix(y)	
+  if( ncol(y) == 1 ){  .y <- y  }else{ .y <- y[,1] }
   if( missing(start.beta) ){
-	b0 <- coef( glm.fit(x, y, family = poisson(link = "log") ) ) 
+	b0 <- coef( glm.fit(x, .y, family = poisson(link = "log") ) ) 
 	mX <- as.matrix(-x[,-1])
 	b0[1] <-  min( mX %*% b0[-1] ) - delta
   }else{
 	b0 <- start.beta
   }
 
-  est <- lbregEst(x, y, start.beta=b0, tol)  
+  fit <- lbreg.fit(x=as.matrix(x), y=y, start.beta=b0, tol=tol)  
 
-  est$residuals <- y - est$fitted.values
+  fit$call <- match.call()
+  return(fit)  
 
-  est$call <- match.call()
-
-  class(est) <- "lbreg"
-  return(est)  
 }
 
 
