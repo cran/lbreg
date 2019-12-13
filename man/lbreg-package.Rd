@@ -12,7 +12,7 @@ The main functions are \code{\link{lbreg}} which provides a shortcut to \code{\l
 to estimate LBR coefficients and \code{\link{relrisk}} which takes lbreg results to 
 produce estimated relative risks and associated confidence intervals and prediction. Results
 differ from \code{\link{glm}} when the MLE is on the boundary of the parameter space as 
-explained in the reference below (Andrade, Andrade (submitted)).
+explained in the reference below (Andrade, Andrade (2018)).
 
 
 }
@@ -29,7 +29,7 @@ The DESCRIPTION file:
 Maintainer: \packageMaintainer{lbreg}
 }
 \references{
-Andrade, BB; Andrade JML (submitted) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
+Andrade, BB; Andrade JML (2018) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
 Communications in Statistics - Theory and Methods.
 
 }

@@ -64,7 +64,7 @@ there are no active constraints (Active = NULL).}
 \item{X2}{sum of squared residuals (variance-inflation estimate (dispersion) = X2/df).}
 }
 \references{
-Andrade, BB; Andrade JML (forthcoming) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
+Andrade, BB; Andrade JML (2018) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
 Communications in Statistics - Theory and Methods.
 }
 \author{

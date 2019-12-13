@@ -19,33 +19,30 @@ lbreg.fit <- function(x, y, start.beta, tol, ...)
     yhat <- as.vector(exp(X %*% beta))
     #out$fitted.values <- yhat
     #out$residuals <- y - yhat
-    
+   
    # active constraints
-   a <- yhat >= tol
+   a <- which( yhat >= tol )   # if none then result is integer(0) and any(a) will be FALSE as desired
    A <- active <- NULL 
    if( any(a) ){     # check for active constraints and proceed with correction of VCOV 
-    Afull = X[a,]
+    Afull = X[a,,drop=FALSE]
     A = Afull
-    if(sum(a) == 1){
-     r = 1
-     p = ncol(X)
-     dim(A) = c(r,p)
-    }else{
-     A = unique(A)   # Afull may have repeated rows
-     r = nrow(A)
-     p = ncol(X)
-     dim(A) = c(r,p)
-    }
+    A = unique(A)   # Afull may have repeated rows
+    r = NROW(A)
+    p = NCOL(A)
+    
+   if( r < p ){   # then use numerically stable version 
     Wtil = diag(p) - projx(t(A))
-    W = Wtil[1:p,1:(p-r)]
+    W = Wtil[1:p,1:(p-r), drop=FALSE]
     if( max( A%*%W ) > sqrt( 1e-6 ) ) { warning("max AW is > 1e-6") }
-    meat = try( MASS::ginv(t(W) %*% J %*% W) )
-      if(class(meat) != "try-error"){
-         new.vcov <- W %*% meat %*% t(W)
-         out$vcov <- new.vcov
-      }else{
-         warning("could not invert (W'JW) --- reported 'vcov' is ignoring active constraints")
-    }
+    meat = MASS::ginv(t(W) %*% J %*% W) 
+   
+    new.vcov <- W %*% meat %*% t(W)
+    out$vcov <- new.vcov
+    
+  }else{  #  r >= p
+    out$vcov <- vcov0 - vcov0 %*% t(A) %*% MASS::ginv(A %*% vcov0 %*% t(A)) %*% A %*% vcov0
+  }
+
    active <- Afull
    if( any(a) ){  dim(active) <- dim(A)  }
    rownames(active) <- (1:nrow(X))[a]

@@ -25,41 +25,34 @@ predict.lbreg <- function(object, newdata, ...)
   
       J <- -hess(beta=beta.pred, x=X, y=y)   # Obs Fisher Info
     
+      iJ <- MASS::ginv( J )
    # active constraints
-   a <- yhat >= object$tol
+   a <- which( yhat >= object$tol )
    Afull <- NULL 
    if( any(a) ){     # check for active constraints and proceed with correction of VCOV 
-	Afull = Xz[a,]
+	Afull = Xz[a,,drop=FALSE]
     A = Afull
-    if(sum(a) == 1){
-     r = 1
-     p = ncol(Xz)
-     dim(A) = c(r,p)
-    }else{
-     A = unique(A) 
-     r = nrow(A)
-     p = ncol(Xz)
-     dim(A) = c(r,p)
-    }
+    A = unique(A) 
+    r = NROW(A)
+    p = NCOL(A)
+    
+    if(r < p){
     Wtil = diag(p) - projx(t(A))
     W = Wtil[1:p,1:(p-r)]
     
     if( max( A%*%W ) > sqrt( 1e-6 ) ) { warning("max AW is > 1e-6") }
     
-    meat <- try( MASS::ginv(t(W) %*% J %*% W) )
-    
-    if(class(meat) != "try-error"){
-       V <- W %*% meat %*% t(W)
-    }else{
-       warning("could not invert (W'JW) --- 'vcov' ignores active constraints") 
-    }
-   
+    meat <- MASS::ginv(t(W) %*% J %*% W) 
+    V <- W %*% meat %*% t(W)
+  }else{
+	V <- iJ - iJ %*% t(A) %*% MASS::ginv(A %*% iJ %*% t(A)) %*% A %*% iJ
+   }
     #nnew <- nrow(Xz) - nrow(X)
     #rownames(Afull) <- c(1:nrow(X), paste('new', 1:nnew, sep=''))[a]
     #colnames(Afull) <- colnames(X)
         # no active constraints
     }else{   
-		V <- MASS::ginv(J)
+		V <- iJ
    }
 
     # SE of prediction

@@ -25,7 +25,7 @@ The confidence interval is calculated from the log(RR) and backtransformed.
 \item{value}{table with estimated relative risks, lower and upper bounds of condifidence intervals.}
 }
 \references{
-Andrade, BB; Andrade JML (forthcoming) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
+Andrade, BB; Andrade JML (2018) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
 Communications in Statistics - Theory and Methods.
 }
 \author{

@@ -33,7 +33,7 @@ If newdata is omitted the predictions are simply the fitted values stored in the
 \item{ypred}{predicted probabilities for newdata.}
 }
 \references{
-Andrade, BB; Andrade JML (forthcoming) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
+Andrade, BB; Andrade JML (2018) Some results for Maximum Likelihood Estimation of Adjusted Relative Risks. 
 Communications in Statistics - Theory and Methods.
 
 }
